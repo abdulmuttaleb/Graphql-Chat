@@ -1,6 +1,7 @@
 const express = require('express')
 const graphqlHTTP = require('express-graphql')
 const {buildSchema} = require('graphql')
+const expressPlayground = require('graphql-playground-middleware-express').default
 const crypto = require('crypto')
 
 const db = {
@@ -51,8 +52,9 @@ const app = express()
 
 app.use('/graphql', graphqlHTTP({
    schema,
-   rootValue,
-   graphiql : true
+   rootValue
 }))
+
+app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
 
 app.listen(3000, () => console.log('Listening on 3000'))
