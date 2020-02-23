@@ -1,6 +1,5 @@
 const { ApolloServer, gql} = require('apollo-server')
 
-const expressPlayground = require('graphql-playground-middleware-express').default
 const crypto = require('crypto')
 
 const db = {
