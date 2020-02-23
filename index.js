@@ -1,6 +1,5 @@
-const express = require('express')
-const graphqlHTTP = require('express-graphql')
-const {buildSchema} = require('graphql')
+const { ApolloServer, gql} = require('apollo-server')
+
 const expressPlayground = require('graphql-playground-middleware-express').default
 const crypto = require('crypto')
 
@@ -18,17 +17,7 @@ const db = {
     ]
 }
 
-class User{
-    constructor(user){
-        Object.assign(this, user)
-    }
-
-    messages(){
-        return db.messages.filter(message => message.userId === this.id)
-    }
-}
-
-const schema = buildSchema(`
+const typeDefs = gql`
     type Query{
         users: [User!]!
         user(id:ID!):User
@@ -52,36 +41,36 @@ const schema = buildSchema(`
         userId:ID!
         body:String
         createdAt: String
-    }
-`)
+    }`
 
-const rootValue = {
-    users: () => db.users.map( user => new User(user)),
+const resolvers = {
 
-    user: args => db.users.find( user => user.id === args.id),
+    Query:{
+        users: () => db.users,
 
-    messages: () => db.messages,
+        user: (root, {id}) => db.users.find( user => user.id === id),
+    
+        messages: () => db.messages
+    },
 
-    addUser: ({email, name}) =>{
-        const user = {
-            id: crypto.randomBytes(10).toString('hex'),
-            email,
-            name
+    Mutation:{
+        addUser: (root, {email, name}) =>{
+            const user = {
+                id: crypto.randomBytes(10).toString('hex'),
+                email,
+                name
+            }
+    
+            db.users.push(user)
+    
+            return user
         }
-
-        db.users.push(user)
-
-        return user
+    },
+    User:{
+        messages: user => db.messages.filter(message => message.userId === user.id)
     }
 }
 
-const app = express()
+const server = new ApolloServer({typeDefs, resolvers})
 
-app.use('/graphql', graphqlHTTP({
-   schema,
-   rootValue
-}))
-
-app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
-
-app.listen(3000, () => console.log('Listening on 3000'))
+server.listen().then(({ url }) => console.log(url))
