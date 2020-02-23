@@ -1,0 +1,27 @@
+{
+  "name": "chat-server",
+  "version": "1.0.0",
+  "description": "graphql chat",
+  "main": "index.js",
+  "dependencies": {
+    "apollo-server": "^2.10.1",
+    "graphql": "^14.6.0",
+    "graphql-playground-middleware-express": "^1.7.12",
+    "supervisor": "^0.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch":"nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdulmuttaleb/Chat-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdulmuttaleb/Chat-Server/issues"
+  },
+  "homepage": "https://github.com/abdulmuttaleb/Chat-Server#readme"
+}
