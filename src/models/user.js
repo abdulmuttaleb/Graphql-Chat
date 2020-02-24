@@ -2,7 +2,14 @@ import mongoose from 'mongoose'
 import { hash } from 'bcryptjs'
 
 const userSchema = new mongoose.Schema({
-  email: String,
+  email: {
+    type: String,
+    validate: {
+      validator: async email => User.doesntExist({ email }),
+      message: ({ value }) => `Email ${value} has been taken!`
+      // TODO: security
+    }
+  },
   username: String,
   name: String,
   password: String
@@ -21,4 +28,9 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-export default mongoose.model('User', userSchema)
+userSchema.statics.doesntExist = async function (options) {
+  return await this.where(options).countDocuments() === 0
+}
+
+const User = mongoose.model('User', userSchema)
+export default User
