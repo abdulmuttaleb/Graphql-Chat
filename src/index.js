@@ -1,8 +1,10 @@
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
+import redis from 'redis'
+import session from 'express-session'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers'
-import { APP_PORT, IN_PROD, DB_HOST } from './config'
+import { APP_PORT, IN_PROD, DB_HOST, SESS_NAME, SESS_SECRET, SESS_LIFETIME, REDIS_HOST, REDIS_PORT, REDIS_PASS } from './config'
 import mongoose from 'mongoose'
 
 (async () => {
@@ -16,10 +18,43 @@ import mongoose from 'mongoose'
 
     app.disable('x-powered-by')
 
+    // init redis store
+    const RedisStore = require('connect-redis')(session)
+    const redisClient = redis.createClient({
+      host: REDIS_HOST,
+      port: REDIS_PORT,
+      password: REDIS_PASS
+    })
+
+    const store = new RedisStore({
+      client: redisClient
+    })
+    // init express session here
+    app.use(session({
+      store,
+      name: SESS_NAME,
+      secret: SESS_SECRET,
+      resave: true,
+      rolling: true,
+      saveUninitialized: false,
+      cookie: {
+        expires: parseInt(SESS_LIFETIME),
+        maxAge: parseInt(SESS_LIFETIME),
+        sameSite: true,
+        secure: IN_PROD
+      }
+    }))
+
     const server = new ApolloServer({
       typeDefs,
       resolvers,
-      playground: !IN_PROD
+      cors: false,
+      playground: IN_PROD ? false : {
+        settings: {
+          'request.credentials': 'include'
+        }
+      },
+      context: ({ req, res }) => ({ req, res })
     })
     server.applyMiddleware({ app }) // app is from an existing express app
 

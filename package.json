@@ -7,6 +7,7 @@
     "@hapi/joi": "^17.1.0",
     "apollo-server-express": "^2.10.1",
     "bcryptjs": "^2.4.3",
+    "connect-redis": "^4.0.4",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
@@ -14,6 +15,7 @@
     "graphql": "^14.6.0",
     "graphql-playground-middleware-express": "^1.7.12",
     "mongoose": "^5.9.2",
+    "redis": "^3.0.2",
     "supervisor": "^0.12.0"
   },
   "devDependencies": {

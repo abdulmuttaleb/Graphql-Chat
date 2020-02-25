@@ -1,16 +1,28 @@
 import mongoose from 'mongoose'
 import { UserInputError } from 'apollo-server-express'
-import { signUp } from '../schemas'
+import { signUp, signIn } from '../schemas'
 import { User } from '../models'
+import * as Auth from '../auth'
 
 export default {
   Query: {
-    users: (root, args, context, info) => {
+    me: (root, args, { req }, info) => {
+      // TODO: add projection
+      Auth.checkSignedIn(req)
+
+      return User.findById(req.session.userId)
+    },
+    users: (root, args, { req }, info) => {
       // TODO: auth, projection, pagination, sanitization
+
+      Auth.checkSignedIn(req)
+
       return User.find({})
     },
-    user: (root, { id }, context, info) => {
+    user: (root, { id }, { req }, info) => {
       // TODO: auth, projection, sanitization
+      Auth.checkSignedIn(req)
+
       if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new UserInputError(`${id} is not a valid user ID.`)
       }
@@ -18,12 +30,39 @@ export default {
     }
   },
   Mutation: {
-    signUp: async (root, args, context, info) => {
+    signUp: async (root, args, { req }, info) => {
       // TODO: not auth
+      Auth.checkSignedOut(req)
 
       await signUp.validateAsync(args, { abortEarly: false })
 
-      return User.create(args)
+      const user = await User.create(args)
+
+      req.session.userId = user.id
+
+      return user
+    },
+
+    signIn: async (root, args, { req }, info) => {
+      const { userId } = req.session
+
+      if (userId) {
+        return User.findById(userId)
+      }
+
+      await signIn.validateAsync(args, { abortEarly: false })
+
+      const user = await Auth.attemptSignIn(args.email, args.password)
+
+      req.session.userId = user.id
+
+      return user
+    },
+
+    signOut: async (root, args, { req, res }, info) => {
+      Auth.checkSignedIn(req)
+
+      return Auth.signOut(req, res)
     }
   }
 }
