@@ -15,7 +15,9 @@
     "graphql": "^14.6.0",
     "graphql-cli": "^3.0.14",
     "graphql-playground-middleware-express": "^1.7.12",
+    "mem": "^4.0.0",
     "mongoose": "^5.9.2",
+    "open": "^6.0.0",
     "redis": "^3.0.2",
     "supervisor": "^0.12.0"
   },
