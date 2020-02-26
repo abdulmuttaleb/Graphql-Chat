@@ -1,0 +1,35 @@
+mutation {
+    signUp(email: "ahmed.sayco93@gmail.com", username: "Saiko", name:"Ahmad AbdulMuttaleb", password: "@Password1"){
+        id
+    }
+}
+
+mutation {
+    signIn(email: "ahmed.sayco93@gmail.com", password: "@Password1"){
+        id
+    }
+}
+
+mutation {
+    signOut
+}
+
+{
+    me {
+        id
+        name
+        email
+    }
+}
+
+{
+    users {
+        id
+    }
+}
+
+{
+    user(id: "5e556dfdc10bbd2accc4a286"){
+        id
+    }
+}
