@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "graphql": "^14.6.0",
+    "graphql-cli": "^3.0.14",
     "graphql-playground-middleware-express": "^1.7.12",
     "mongoose": "^5.9.2",
     "redis": "^3.0.2",

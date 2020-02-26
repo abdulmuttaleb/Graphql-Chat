@@ -6,6 +6,7 @@ import typeDefs from './typeDefs'
 import resolvers from './resolvers'
 import { APP_PORT, IN_PROD, DB_HOST, SESS_NAME, SESS_SECRET, SESS_LIFETIME, REDIS_HOST, REDIS_PORT, REDIS_PASS } from './config'
 import mongoose from 'mongoose'
+import schemaDirectives from './directives'
 
 (async () => {
   try {
@@ -48,6 +49,7 @@ import mongoose from 'mongoose'
     const server = new ApolloServer({
       typeDefs,
       resolvers,
+      schemaDirectives,
       cors: false,
       playground: IN_PROD ? false : {
         settings: {
@@ -56,7 +58,7 @@ import mongoose from 'mongoose'
       },
       context: ({ req, res }) => ({ req, res })
     })
-    server.applyMiddleware({ app }) // app is from an existing express app
+    server.applyMiddleware({ app, cors: false }) // app is from an existing express app
 
     app.listen({ port: APP_PORT }, () => {
       console.log(`http://localhost:${APP_PORT}${server.graphqlPath}`)
