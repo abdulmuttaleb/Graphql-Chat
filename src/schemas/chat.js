@@ -1,5 +1,4 @@
 import Joi from './joi'
-import mongoose from 'mongoose'
 
 export const startChat = userId => Joi.object().keys({
   title: Joi.string().min(6).max(30).label('Title'),
