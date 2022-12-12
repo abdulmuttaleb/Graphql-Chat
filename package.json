@@ -10,7 +10,7 @@
     "connect-redis": "^4.0.4",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.0",
     "graphql": "^14.6.0",
     "graphql-cli": "^3.0.14",
