@@ -13,7 +13,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "graphql": "^14.6.0",
-    "graphql-cli": "^3.0.14",
+    "graphql-cli": "^4.1.0",
     "graphql-playground-middleware-express": "^1.7.12",
     "joi-objectid": "^3.0.1",
     "mem": "^4.0.0",
